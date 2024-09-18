@@ -7,11 +7,13 @@
       yum:
         name: httpd  # installs the httpd package
         state: present
+        owner: root
 
     - name: Enable HTTPD service
       service:
         name: httpd  # enables the httpd service
         state: started
+        owner: root
 
     - name: Copy the Index.html file
       copy:  # copies the index.html page from Controller node to Target
