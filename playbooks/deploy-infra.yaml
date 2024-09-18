@@ -1,49 +1,22 @@
 ---
-- name: Configure Web server
+- name: Install Package
   hosts: web
-  become: yes
-  vars_files:
-    - var/main.yml
+
   tasks:
-    - name: Create directory for storing our website (/webapp/main-site)
-      become: yes
-      file:
-        path: /webapp/main-site
-        state: directory
+    - name: Install httpd package
+      yum:
+        name: httpd  # installs the httpd package
+        state: present
 
-    - name: Install nginx server
-      apt: 
-        name: nginx 
-        state: latest
-      #force_apt_get: yes # Force usage of apt-get instead of aptitude
-
-    - name: Start nginx service
+    - name: Enable HTTPD service
       service:
-        name: nginx
+        name: httpd  # enables the httpd service
         state: started
-        enabled: true
 
-    - name: Copy nginx configuration
-      copy:
-        src: static_site.cfg
-        dest: /etc/nginx/sites-available/static_site.cfg
-        mode: 755
-      become: yes
-    
-    - name: Create symlink to activate the site.
-      file:
-        src: /etc/nginx/sites-available/static_site.cfg
-        dest: /etc/nginx/sites-enabled/default
-        state: link
-      become: yes
-
-    - name: Clone website from github
-      git:
-        repo: 'https://github.com/ginigangadharan/demo-website-content.git'
-        dest: /webapp/main-site
-
-    - name: restart nginx to load configuratioins
-      service:
-        name: nginx
-        state: restarted
-      become: yes
+    - name: Copy the Index.html file
+      copy:  # copies the index.html page from Controller node to Target
+        src:  /etc/ansible/playbooks/index.html
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: 0644           
