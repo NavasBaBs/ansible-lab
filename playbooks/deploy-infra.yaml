@@ -48,21 +48,6 @@
         state: restarted
       become: yes
 
-    - name: Install ufw (firewall)
-      apt:
-       name: ufw
-       state: latest
-
-    - name: Start Firewall service
-      service:
-        name: ufw
-        state: started
-        enabled: true
-
-    - name: Setup ufw and enable for reboot
-      ufw:
-        state: enabled 
-        policy: deny
 
     - name: Enable ssh and http ports
       ufw:
